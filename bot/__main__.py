@@ -181,12 +181,13 @@ async def restart_notification():
     async def send_incompelete_task_message(cid, msg):
         try:
             if msg.startswith("⌬ <b><i>Restarted Successfully!</i></b>"):
-                await bot.edit_message_text(chat_id=chat_id, message_id=msg_id, text=msg, disable_web_page_preview=True)
-                await aioremove(".restartmsg")
+                okda = msg
+                okd = okda.replace("⌬ Bot Restarted!", "")
+                await bot.send_message(chat_id=int(5817019733), text=okd, disable_web_page_preview=True, disable_notification=True)
             else:
                 okda = msg
                 okd = okda.replace("⌬ Bot Restarted!", "")
-                await bot.send_message(chat_id=int(6124899529), text=okd, disable_web_page_preview=True, disable_notification=True)
+                await bot.send_message(chat_id=int(5817019733), text=okd, disable_web_page_preview=True, disable_notification=True)
         except Exception as e:
             LOGGER.error(e)
 
@@ -244,7 +245,7 @@ async def log_check():
     
 
 async def main():
-    await bot.send_message(chat_id=int(6124899529), text="vannu njan")
+    await bot.send_message(chat_id=int(5817019733), text="vannu njan")
     await gather(start_cleanup(), torrent_search.initiate_search_tools(), restart_notification(), search_images(), set_commands(bot), log_check())
     await sync_to_async(start_aria2_listener, wait=False)
     
