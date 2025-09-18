@@ -116,7 +116,7 @@ class DbManger:
             del data['thumb']
         if data.get('rclone'):
             del data['rclone']
-        await self.__db.users[bot_id].replace_one({'_id': user_id}, data, upsert=True)
+        await self.__db.users[bot_id].update_one({'_id': user_id}, {'$set': data}, upsert=True)
         self.__conn.close
 
     async def update_user_doc(self, user_id, key, path=''):
