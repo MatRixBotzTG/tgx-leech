@@ -54,8 +54,8 @@ class MirrorStatus:
     STATUS_EXTRACTING  = "Extract"
     STATUS_SPLITTING   = "Split"
     STATUS_CHECKING    = "CheckUp"
-    STATUS_SEEDING     = "Seed"
-
+    STATUS_SEEDING     = "Seed" 
+    STATUS_AUDIOLANGUAGE = "Changing Audio Language"
 
 class setInterval:
     def __init__(self, interval, action):
@@ -277,6 +277,7 @@ def get_readable_message():
         elif tstatus in [
             MirrorStatus.STATUS_UPLOADING,
             MirrorStatus.STATUS_SEEDING,
+            MirrorStatus.STATUS_AUDIOLANGUAGE,
         ]:
             up_speed += speed_in_bytes_per_second
 
