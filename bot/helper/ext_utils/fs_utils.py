@@ -175,3 +175,74 @@ async def join_files(path):
             for file_ in files:
                 if re_search(fr"{res}\.0[0-9]+$", file_):
                     await aioremove(f'{path}/{file_}')
+
+async def get_audio_stream_count(file_path):
+    cmd = [
+        'ffprobe', 
+        '-v', 
+        'error', 
+        '-select_streams', 
+        'a', 
+        '-show_entries', 
+        'stream=index', 
+        '-of', 
+        'csv=p=0', 
+        file_path
+    ]
+    process = await create_subprocess_exec(*cmd, stdout=PIPE, stderr=PIPE)
+    stdout, stderr = await process.communicate()
+    if process.returncode != 0:
+        err = stderr.decode().strip()
+        LOGGER.error(f"FFprobe error: {err}")
+        raise RuntimeError(f"FFprobe failed with error: {err}")
+    return len(stdout.decode().strip().split('\n'))
+
+async def edit_audiolanguage(
+    listener, base_dir: str, media_file: str, outfile: str, audiolanguage: str = ''
+):
+    try:
+        audio_stream_count = await get_audio_stream_count(media_file)
+    except Exception as e:
+        LOGGER.error(f"❌ Unable to determine audio stream count for {media_file}: {str(e)}")
+        return media_file
+
+    language_keys = audiolanguage.split(',')
+
+    if len(language_keys) > audio_stream_count:
+        LOGGER.error(f"❌ More languages provided than available audio streams ({audio_stream_count}).")
+        return media_file
+
+    cmd = [
+        bot_cache["pkgs"][2],
+        '-hide_banner',
+        '-i', 
+        media_file,
+        '-map', 
+        '0:v:0'
+    ]
+
+    for audio_key in range(audio_stream_count):
+        cmd.extend(['-map', f'0:a:{audio_key}'])
+        if audio_key < len(language_keys) and language_keys[audio_key]:
+            cmd.extend([f'-metadata:s:a:{audio_key}', f'language={language_keys[audio_key]}'])
+
+    cmd.extend([
+        '-c:v', 'copy',
+        '-c:a', 'copy',
+        '-map', '0:s?',
+        '-c:s', 'copy',
+        '-y', outfile
+    ])
+
+    listener.suproc = await create_subprocess_exec(*cmd, stderr=PIPE)
+    code = await listener.suproc.wait()
+
+    if code == 0:
+        LOGGER.info(f"✅ Successfully updated audio language metadata: {outfile}")
+        await clean_target(media_file)
+        listener.seed = False
+        await move(outfile, base_dir)
+    else:
+        error_msg = await listener.suproc.stderr.read()
+        LOGGER.error(f"❌ Failed to update audio languages for {media_file}: {error_msg.decode().strip()}")
+        await clean_target(outfile)
