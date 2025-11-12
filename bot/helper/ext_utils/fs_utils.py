@@ -176,6 +176,7 @@ async def join_files(path):
                 if re_search(fr"{res}\.0[0-9]+$", file_):
                     await aioremove(f'{path}/{file_}')
 
+
 async def get_audio_stream_count(file_path):
     cmd = [
         'ffprobe', 
@@ -196,6 +197,7 @@ async def get_audio_stream_count(file_path):
         LOGGER.error(f"FFprobe error: {err}")
         raise RuntimeError(f"FFprobe failed with error: {err}")
     return len(stdout.decode().strip().split('\n'))
+
 
 async def edit_audiolanguage(
     listener, base_dir: str, media_file: str, outfile: str, audiolanguage: str = ''
