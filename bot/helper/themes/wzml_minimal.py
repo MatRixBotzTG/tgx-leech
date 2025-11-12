@@ -295,4 +295,5 @@ class WZMLStyle:
 ┠<b> Leech Prefix :</b> <code>{LPREFIX}</code>
 ┠<b> Leech Suffix :</b> <code>{LSUFFIX}</code>
 ┠<b> Leech Dumps :</b> <code>{LDUMP}</code>
-┖<b> Leech Remname :</b> <code>{LREMNAME}</code>'''
+┠<b> Leech Remname :</b> <code>{LREMNAME}</code>
+┖<b> Audio Language :</b> <code>{AUDIOLANGUAGE}</code>'''
