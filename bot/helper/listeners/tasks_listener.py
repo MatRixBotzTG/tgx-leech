@@ -274,7 +274,7 @@ class MirrorLeechListener:
                 self.newDir = ""
                 up_path = dl_path
 
-        if audiolanguage := self.user_dict.get("audiolanguage") or config_dict["AUDIOLANGUAGE"]:
+        '''if audiolanguage := self.user_dict.get("audiolanguage") or config_dict["AUDIOLANGUAGE"]:
             meta_path = up_path or dl_path
             self.newDir = f"{self.dir}10000"
             await makedirs(self.newDir, exist_ok=True)
@@ -299,7 +299,7 @@ class MirrorLeechListener:
                             outfile = ospath.join(self.newDir, file)
                             await edit_audiolanguage(
                                 self, dirpath, video_file, outfile, audiolanguage
-                            )
+                            )'''
 
         if self.compress:
             pswd = self.compress if isinstance(self.compress, str) else ''
