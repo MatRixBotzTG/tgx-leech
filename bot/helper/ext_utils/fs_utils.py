@@ -177,7 +177,7 @@ async def join_files(path):
                     await aioremove(f'{path}/{file_}')
 
 
-async def get_audio_stream_count(file_path):
+'''async def get_audio_stream_count(file_path):
     cmd = [
         'ffprobe', 
         '-v', 
@@ -247,4 +247,4 @@ async def edit_audiolanguage(
     else:
         error_msg = await listener.suproc.stderr.read()
         LOGGER.error(f"❌ Failed to update audio languages for {media_file}: {error_msg.decode().strip()}")
-        await clean_target(outfile)
+        await clean_target(outfile)'''
