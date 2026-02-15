@@ -382,10 +382,6 @@ async def log_check():
 
 
 async def main():
-    await bot.send_message(
-        chat_id=int(7266959638), 
-        text="vannu njan"
-    )
     await gather(
         start_cleanup(),
         torrent_search.initiate_search_tools(),
