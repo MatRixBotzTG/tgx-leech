@@ -274,33 +274,6 @@ class MirrorLeechListener:
                 self.newDir = ""
                 up_path = dl_path
 
-        if audiolanguage := self.user_dict.get("audiolanguage") or config_dict["AUDIOLANGUAGE"]:
-            meta_path = up_path or dl_path
-            self.newDir = f"{self.dir}10000"
-            await makedirs(self.newDir, exist_ok=True)
-            async with download_dict_lock:
-                download_dict[self.uid] = AudioLanguageStatus(name, size, gid, self)
-            if (
-                await aiopath.isfile(meta_path)
-                and (await get_document_type(meta_path))[0]
-            ):
-                base_dir, file_name = ospath.split(meta_path)
-                outfile = ospath.join(self.newDir, file_name)
-                await edit_audiolanguage(self, base_dir, meta_path, outfile, audiolanguage)
-                if self.suproc == "cancelled":
-                    return
-            elif await aiopath.isdir(meta_path):
-                for dirpath, _, files in await sync_to_async(walk, meta_path):
-                    for file in files:
-                        if self.suproc == "cancelled":
-                            return
-                        video_file = ospath.join(dirpath, file)
-                        if (await get_document_type(video_file))[0]:
-                            outfile = ospath.join(self.newDir, file)
-                            await edit_audiolanguage(
-                                self, dirpath, video_file, outfile, audiolanguage
-                            )
-
         if self.compress:
             pswd = self.compress if isinstance(self.compress, str) else ''
             if up_path:
