@@ -147,6 +147,9 @@ def get_progress_bar_string(pct):
     p_str += '□' * (12 - cFull)
     return f"[{p_str}]"
 
+def action(message: str) -> str:
+    acts = message.text.split(maxsplit=1)[0]
+    return acts.replace('/', '#').replace(f'@{bot_name}', '').replace(str(config_dict['CMD_SUFFIX']), '').lower()
 
 def get_all_versions():
     try:
